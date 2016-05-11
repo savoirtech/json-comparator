@@ -1,0 +1,52 @@
+{
+  "ARRAY1": [
+    1,
+    2,
+    3
+  ],
+  "root": {
+    "type": "alpha",
+    "uuid": "E223923E-6F77-4D7F-B292-C56A041A92B5",
+    "children": [
+      {
+        "type": "beta",
+        "children": [
+          {
+            "type": "omega",
+            "children": [
+              "three ",
+              "one ",
+              "4",
+              "two",
+              " ",
+              {
+                "uuid": "3EE52530-ADFC-41F1-A9B4-207E1B6B38D6",
+                "name": "Ralph"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "theta",
+        "object1": {
+          "fieldA": "A",
+          "fieldB": "B",
+          "fieldC": "C",
+          "object1.1": {
+            "fieldA.1": "A.1",
+            "fieldB.1": "B.1",
+            "fieldC.1": "C.1",
+            "idlist": [
+              2002,
+              1001,
+              4004,
+              3003
+            ]
+          }
+        }
+      }
+    ],
+    "description": "the one used by all"
+  }
+}
