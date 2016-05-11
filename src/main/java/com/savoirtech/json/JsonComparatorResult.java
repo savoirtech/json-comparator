@@ -45,7 +45,7 @@ public class JsonComparatorResult {
    * indicates to the comparator whether it needs to walk into objects and arrays.  If the result
    * is a deep comparison, the comparator will not walk into objects and arrays itself.
    *
-   * @return true => comparison was deep; false => comparison was shallow.
+   * @return true = comparison was deep; false = comparison was shallow.
    */
   public boolean isDeep() {
     return deep;
@@ -54,7 +54,7 @@ public class JsonComparatorResult {
   /**
    * Determine whether the JSON matched.
    *
-   * @return true => the JSON matched; false => the JSON did not match.
+   * @return true = the JSON matched; false = the JSON did not match.
    */
   public boolean isMatch() {
     return match;

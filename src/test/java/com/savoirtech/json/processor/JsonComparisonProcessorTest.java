@@ -387,7 +387,7 @@ public class JsonComparisonProcessorTest {
    *
    * @param templateEle template JSON for the comparison.
    * @param actualEle actual JSON for the comparison.
-   * @param expectMatch true => a match is expected; false => a mismatch is expected.
+   * @param expectMatch true = a match is expected; false = a mismatch is expected.
    * @param expectedErrorMessage error message expected.
    * @throws Exception
    */
