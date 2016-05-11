@@ -60,7 +60,7 @@ PATHS
 
 RULE ACTIONS
 ===========
-    "match"
+    "matches"
         - Regular expression matching of the value; best used only with primitives.
         - The "pattern" field for the rule contains the regular expression applied using Java's
           String.matches() method.
