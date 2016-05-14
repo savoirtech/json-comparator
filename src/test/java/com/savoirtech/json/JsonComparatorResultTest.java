@@ -16,7 +16,6 @@
 
 package com.savoirtech.json;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -33,10 +32,10 @@ public class JsonComparatorResultTest {
    */
   @Test
   public void testIsDeep() throws Exception {
-    JsonComparatorResult result1 = new JsonComparatorResult(false, true, null);
+    JsonComparatorResult result1 = new JsonComparatorResult(false, true, null, null);
     assertFalse(result1.isDeep());
 
-    JsonComparatorResult result2 = new JsonComparatorResult(true, false, null);
+    JsonComparatorResult result2 = new JsonComparatorResult(true, false, null, null);
     assertTrue(result2.isDeep());
   }
 
@@ -45,10 +44,10 @@ public class JsonComparatorResultTest {
    */
   @Test
   public void testIsMatch() throws Exception {
-    JsonComparatorResult result1 = new JsonComparatorResult(false, true, null);
+    JsonComparatorResult result1 = new JsonComparatorResult(false, true, null, null);
     assertTrue(result1.isMatch());
 
-    JsonComparatorResult result2 = new JsonComparatorResult(true, false, null);
+    JsonComparatorResult result2 = new JsonComparatorResult(true, false, null, null);
     assertFalse(result2.isMatch());
   }
 
@@ -57,10 +56,22 @@ public class JsonComparatorResultTest {
    */
   @Test
   public void testGetErrorMessage() throws Exception {
-    JsonComparatorResult result1 = new JsonComparatorResult(true, true, null);
+    JsonComparatorResult result1 = new JsonComparatorResult(true, true, null, null);
     assertNull(result1.getErrorMessage());
 
-    JsonComparatorResult result2 = new JsonComparatorResult(true, true, "x-error-message-x");
+    JsonComparatorResult result2 = new JsonComparatorResult(true, true, "x-error-message-x", null);
     assertEquals("x-error-message-x", result2.getErrorMessage());
+  }
+
+  /**
+   * Verify operation of the getErrorPath method.
+   */
+  @Test
+  public void testGetErrorPath() throws Exception {
+    JsonComparatorResult result1 = new JsonComparatorResult(true, true, null, null);
+    assertNull(result1.getErrorPath());
+
+    JsonComparatorResult result2 = new JsonComparatorResult(true, true, null, "x-error-path-x");
+    assertEquals("x-error-path-x", result2.getErrorPath());
   }
 }

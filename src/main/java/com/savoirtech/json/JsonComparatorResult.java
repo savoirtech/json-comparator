@@ -25,15 +25,17 @@ public class JsonComparatorResult {
   private final boolean deep;
   private final boolean match;
   private final String errorMessage;
+  private final String errorPath;
 
 //========================================
 // Constructor
 //----------------------------------------
 
-  public JsonComparatorResult(boolean deep, boolean match, String errorMessage) {
+  public JsonComparatorResult(boolean deep, boolean match, String errorMessage, String errorPath) {
     this.deep = deep;
     this.match = match;
     this.errorMessage = errorMessage;
+    this.errorPath = errorPath;
   }
 
 //========================================
@@ -67,5 +69,14 @@ public class JsonComparatorResult {
    */
   public String getErrorMessage() {
     return errorMessage;
+  }
+
+  /**
+   * Obtain the path at which an error was detected.
+   *
+   * @return the path at which an error was detected, if known; null otherwise.
+   */
+  public String getErrorPath() {
+    return errorPath;
   }
 }

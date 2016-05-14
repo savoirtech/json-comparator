@@ -92,13 +92,15 @@ public class JsonComparator {
     //
     if (templateJson == null) {
       if (actualJson != null) {
-        return new JsonComparatorResult(false, false, "template json is null; actual json is not");
+        return new JsonComparatorResult(false, false, "template json is null; actual json is not",
+                                        "$");
       } else {
         // Expected and actual json are null; accept them as-is
-        return new JsonComparatorResult(true, true, null);
+        return new JsonComparatorResult(true, true, null, null);
       }
     } else if (actualJson == null) {
-      return new JsonComparatorResult(false, false, "actual json is null; template json is not");
+      return new JsonComparatorResult(false, false, "actual json is null; template json is not",
+                                      "$");
     }
 
     //

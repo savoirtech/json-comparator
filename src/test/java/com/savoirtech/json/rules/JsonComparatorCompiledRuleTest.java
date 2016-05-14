@@ -78,7 +78,7 @@ public class JsonComparatorCompiledRuleTest {
     //
     // Setup test data and interactions
     //
-    JsonComparatorResult testResult = new JsonComparatorResult(true, true, null);
+    JsonComparatorResult testResult = new JsonComparatorResult(true, true, null, null);
     Mockito.when(this.mockRule
                      .compare("x-path-x", this.templateEle, this.actualEle, this.ruleSpecification,
                               this.mockChildComparator)).thenReturn(testResult);

@@ -39,6 +39,7 @@ public class RegexMatchingRule implements JsonComparatorRule {
 
     boolean matches;
     String errorMessage = null;
+    String errorPath = null;
 
     String value = this.getStringForComparison(actualElement);
 
@@ -48,9 +49,10 @@ public class RegexMatchingRule implements JsonComparatorRule {
       errorMessage =
           "value at path " + path + " does not match '" + specification.getPattern() + "': value="
           + value;
+      errorPath = path;
     }
 
-    return new JsonComparatorResult(false, matches, errorMessage);
+    return new JsonComparatorResult(false, matches, errorMessage, errorPath);
   }
 
 

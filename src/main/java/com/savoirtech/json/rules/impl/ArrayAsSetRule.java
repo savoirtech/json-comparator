@@ -57,12 +57,12 @@ public class ArrayAsSetRule implements JsonComparatorRule {
       } else {
         result =
             new JsonComparatorResult(true, false,
-                                     "set rule on non-array template element at path " + path);
+                                     "set rule on non-array template element at path " + path, path);
       }
     } else {
       result =
           new JsonComparatorResult(true, false,
-                                   "set rule on non-array element at path " + path);
+                                   "set rule on non-array element at path " + path, path);
     }
 
     return result;
@@ -78,6 +78,7 @@ public class ArrayAsSetRule implements JsonComparatorRule {
 
     boolean matches = true;
     String errorMessage = null;
+    String errorPath = null;
 
     // First simply check the size; if they don't match, the sets cannot be equivalent.
     if (expectedArray.size() != actualArray.size()) {
@@ -85,7 +86,7 @@ public class ArrayAsSetRule implements JsonComparatorRule {
           "set comparison: sizes do not match at path " + path +
           ": expectedCount=" + expectedArray.size() + "; actualCount=" + actualArray.size();
 
-      return new JsonComparatorResult(true, false, errorMessage);
+      return new JsonComparatorResult(true, false, errorMessage, path);
     }
 
 
@@ -119,12 +120,13 @@ public class ArrayAsSetRule implements JsonComparatorRule {
       } else {
         matches = false;
         errorMessage = "set comparison: failed to find match for path " + childPath;
+        errorPath = childPath;
       }
 
       position++;
     }
 
-    return new JsonComparatorResult(true, matches, errorMessage);
+    return new JsonComparatorResult(true, matches, errorMessage, errorPath);
   }
 
   /**

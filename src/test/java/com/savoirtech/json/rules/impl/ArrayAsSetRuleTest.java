@@ -56,8 +56,8 @@ public class ArrayAsSetRuleTest {
     this.mockChildComparator = Mockito.mock(RuleChildComparator.class);
     this.mockRuleSpecification = Mockito.mock(JsonComparatorRuleSpecification.class);
 
-    this.passResult = new JsonComparatorResult(true, true, null);
-    this.failResult = new JsonComparatorResult(true, false, "x-fail-message-x");
+    this.passResult = new JsonComparatorResult(true, true, null, null);
+    this.failResult = new JsonComparatorResult(true, false, "x-fail-message-x", "x-fail-path-x");
     this.templateArray = new JsonArray();
     this.actualArray = new JsonArray();
 

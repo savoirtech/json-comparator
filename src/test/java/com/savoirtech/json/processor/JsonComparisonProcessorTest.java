@@ -104,7 +104,8 @@ public class JsonComparisonProcessorTest {
     // Execute and Verify
     //
     this.testComparison(this.templateJson, this.actualJson, false,
-                        "primitive mismatch at path $: actual=\"x-actual-x\"; expected=\"x-template-x\"");
+                        "primitive mismatch at path $: actual=\"x-actual-x\"; expected=\"x-template-x\"",
+                        "$");
   }
 
   /**
@@ -121,7 +122,7 @@ public class JsonComparisonProcessorTest {
     //
     // Execute and Verify
     //
-    this.testComparison(templateValue1, actualValue1, true, null);
+    this.testComparison(templateValue1, actualValue1, true, null, null);
   }
 
   /**
@@ -141,7 +142,7 @@ public class JsonComparisonProcessorTest {
     //
     // Execute and Verify
     //
-    this.testComparison(templateObject, actualObject, true, null);
+    this.testComparison(templateObject, actualObject, true, null, null);
   }
 
   /**
@@ -162,7 +163,7 @@ public class JsonComparisonProcessorTest {
     // Execute and Verify
     //
     this.testComparison(templateObject, actualObject, false,
-                        "primitive mismatch at path $['x-field1-x']: actual=\"x-value2-x\"; expected=\"x-value1-x\"");
+                        "primitive mismatch at path $['x-field1-x']: actual=\"x-value2-x\"; expected=\"x-value1-x\"", "$['x-field1-x']");
   }
 
   /**
@@ -185,7 +186,7 @@ public class JsonComparisonProcessorTest {
     // Execute and Verify
     //
     this.testComparison(templateObject, actualObject, false,
-                        "object field sets do not match: path='$'");
+                        "object field sets do not match: path='$'", "$");
   }
 
   /**
@@ -205,7 +206,7 @@ public class JsonComparisonProcessorTest {
     //
     // Execute and Verify
     //
-    this.testComparison(templateArray, actualArray, true, null);
+    this.testComparison(templateArray, actualArray, true, null, null);
   }
 
   /**
@@ -227,7 +228,7 @@ public class JsonComparisonProcessorTest {
     // Execute and Verify
     //
     this.testComparison(templateArray, actualArray, false,
-                        "array size mismatch: path='$'; actualSize=1; expectedSize=2");
+                        "array size mismatch: path='$'; actualSize=1; expectedSize=2", "$");
   }
 
   /**
@@ -248,21 +249,20 @@ public class JsonComparisonProcessorTest {
     // Execute and Verify
     //
     this.testComparison(templateArray, actualArray, false,
-                        "primitive mismatch at path $[0]: actual=\"x-value2-x\"; expected=\"x-value1-x\"");
+                        "primitive mismatch at path $[0]: actual=\"x-value2-x\"; expected=\"x-value1-x\"",
+                        "$[0]");
   }
 
   /**
    * Verify the operation of the executeComparison method when comparing via a rule which returns a
    * match.
-   *
-   * @throws Exception
    */
   @Test
   public void testExecuteComparisonWithMatchingRule() throws Exception {
     //
     // Setup test data and interactions
     //
-    JsonComparatorResult testResult = new JsonComparatorResult(true, true, null);
+    JsonComparatorResult testResult = new JsonComparatorResult(true, true, null, null);
     Mockito.when(this.mockRuleProcessor.findMatchingRule("$")).thenReturn(this.mockCompiledRule);
     Mockito.when(this.mockCompiledRule
                      .compare(Mockito.eq("$"), Mockito.same(this.templateJson),
@@ -273,21 +273,21 @@ public class JsonComparisonProcessorTest {
     //
     // Execute and Verify
     //
-    this.testComparison(this.templateJson, this.actualJson, true, null);
+    this.testComparison(this.templateJson, this.actualJson, true, null, null);
   }
 
   /**
    * Verify the operation of the executeComparison method when comparing via a rule which returns a
    * failure.
-   *
-   * @throws Exception
    */
   @Test
   public void testExecuteComparisonFailureWithMatchingRule() throws Exception {
     //
     // Setup test data and interactions
     //
-    JsonComparatorResult testResult = new JsonComparatorResult(true, false, "x-error-message-x");
+    JsonComparatorResult
+        testResult =
+        new JsonComparatorResult(true, false, "x-error-message-x", "x-error-path-x");
     Mockito.when(this.mockRuleProcessor.findMatchingRule("$")).thenReturn(this.mockCompiledRule);
     Mockito.when(this.mockCompiledRule
                      .compare(Mockito.eq("$"), Mockito.same(this.templateJson),
@@ -298,14 +298,13 @@ public class JsonComparisonProcessorTest {
     //
     // Execute and Verify
     //
-    this.testComparison(this.templateJson, this.actualJson, false, "x-error-message-x");
+    this.testComparison(this.templateJson, this.actualJson, false, "x-error-message-x",
+                        "x-error-path-x");
   }
 
   /**
    * Verify the operation of the executeComparison method when comparing an object against a
    * primitive value.
-   *
-   * @throws Exception
    */
   @Test
   public void testExecuteComparisonObjectVsPrimitive() throws Exception {
@@ -319,14 +318,12 @@ public class JsonComparisonProcessorTest {
     // Execute and Verify
     //
     this.testComparison(templateObject, actualEle, false,
-                        "actual json at path $ is not an object, but an object is expected");
+                        "actual json at path $ is not an object, but an object is expected", "$");
   }
 
   /**
    * Verify the operation of the executeComparison method when comparing an array against a
    * primitive value.
-   *
-   * @throws Exception
    */
   @Test
   public void testExecuteComparisonArrayVsPrimitive() throws Exception {
@@ -340,13 +337,11 @@ public class JsonComparisonProcessorTest {
     // Execute and Verify
     //
     this.testComparison(templateArray, actualEle, false,
-                        "actual json at path $ is not an array, but an array is expected");
+                        "actual json at path $ is not an array, but an array is expected", "$");
   }
 
   /**
    * Test a comparison that goes through the child adapter of the processor.
-   *
-   * @throws Exception
    */
   @Test
   public void testCompareWithChildAdapter() throws Exception {
@@ -374,7 +369,8 @@ public class JsonComparisonProcessorTest {
     // Execute and Verify
     //
     this.testComparison(this.templateJson, this.actualJson, false,
-                        "primitive mismatch at path x-sub-path-x: actual=\"x-actual-x\"; expected=\"x-template-x\"");
+                        "primitive mismatch at path x-sub-path-x: actual=\"x-actual-x\"; expected=\"x-template-x\"",
+                        "x-sub-path-x");
   }
 
 //========================================
@@ -385,14 +381,13 @@ public class JsonComparisonProcessorTest {
    * Execute the test with a new processor configured for the given template and actual JSON
    * elements and verify the result match the expected values.
    *
-   * @param templateEle template JSON for the comparison.
-   * @param actualEle actual JSON for the comparison.
-   * @param expectMatch true = a match is expected; false = a mismatch is expected.
+   * @param templateEle          template JSON for the comparison.
+   * @param actualEle            actual JSON for the comparison.
+   * @param expectMatch          true = a match is expected; false = a mismatch is expected.
    * @param expectedErrorMessage error message expected.
-   * @throws Exception
    */
   private void testComparison(JsonElement templateEle, JsonElement actualEle, boolean expectMatch,
-                              String expectedErrorMessage) throws Exception {
+                              String expectedErrorMessage, String expectedErrorPath) throws Exception {
     //
     // Setup test data and interactions
     //
@@ -414,6 +409,7 @@ public class JsonComparisonProcessorTest {
     Mockito.verify(this.mockRuleProcessor).init();
     assertEquals(expectMatch, result.isMatch());
     assertEquals(expectedErrorMessage, result.getErrorMessage());
+    assertEquals(expectedErrorPath, result.getErrorPath());
   }
 
 }

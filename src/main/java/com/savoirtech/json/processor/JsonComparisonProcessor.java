@@ -179,27 +179,27 @@ public class JsonComparisonProcessor {
 
     if (expected.isJsonObject()) {
       if (actual.isJsonObject()) {
-        return new JsonComparatorResult(false, true, null);
+        return new JsonComparatorResult(false, true, null, null);
       } else {
         return new JsonComparatorResult(false, false,
                                         "actual json at path " + path
-                                        + " is not an object, but an object is expected");
+                                        + " is not an object, but an object is expected", path);
       }
     } else if (expected.isJsonArray()) {
       if (actual.isJsonArray()) {
-        return new JsonComparatorResult(false, true, null);
+        return new JsonComparatorResult(false, true, null, null);
       } else {
         return new JsonComparatorResult(false, false,
                                         "actual json at path " + path
-                                        + " is not an array, but an array is expected");
+                                        + " is not an array, but an array is expected", path);
       }
     } else {
       if (expected.equals(actual)) {
-        return new JsonComparatorResult(false, true, null);
+        return new JsonComparatorResult(false, true, null, null);
       } else {
         return new JsonComparatorResult(false, false,
                                         "primitive mismatch at path " + path + ": actual=" + actual
-                                        + "; expected=" + expected);
+                                        + "; expected=" + expected, path);
       }
     }
   }
@@ -212,6 +212,7 @@ public class JsonComparisonProcessor {
 
     boolean match = true;
     String errorMessage = null;
+    String errorPath = null;
 
     //
     // Make sure the set of fields in both objects match.  If not, there's no need to continue to
@@ -238,13 +239,15 @@ public class JsonComparisonProcessor {
 
         match = fieldResult.isMatch();
         errorMessage = fieldResult.getErrorMessage();
+        errorPath = fieldResult.getErrorPath();
       }
     } else {
       match = false;
       errorMessage = "object field sets do not match: path='" + pathToObject + "'";
+      errorPath = pathToObject;
     }
 
-    return new JsonComparatorResult(true, match, errorMessage);
+    return new JsonComparatorResult(true, match, errorMessage, errorPath);
   }
 
   /**
@@ -261,6 +264,7 @@ public class JsonComparisonProcessor {
 
     boolean match = true;
     String errorMessage = null;
+    String errorPath = null;
 
     //
     // Make sure the arrays are the same size; otherwise, there's no need to check the contents.
@@ -286,6 +290,7 @@ public class JsonComparisonProcessor {
 
         match = childResult.isMatch();
         errorMessage = childResult.getErrorMessage();
+        errorPath = childResult.getErrorPath();
 
         position++;
       }
@@ -294,9 +299,10 @@ public class JsonComparisonProcessor {
       errorMessage =
           "array size mismatch: path='" + pathToArray + "'; actualSize=" + actualArr.size()
           + "; expectedSize=" + templateArr.size();
+      errorPath = pathToArray;
     }
 
-    return new JsonComparatorResult(true, match, errorMessage);
+    return new JsonComparatorResult(true, match, errorMessage, errorPath);
   }
 
   /**
