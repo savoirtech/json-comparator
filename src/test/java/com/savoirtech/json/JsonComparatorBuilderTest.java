@@ -22,6 +22,7 @@ import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.Option;
 import com.jayway.jsonpath.spi.json.GsonJsonProvider;
 import com.savoirtech.json.processor.JsonComparisonProcessorFactory;
+import com.savoirtech.json.util.JsonComparatorUtil;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -65,12 +66,14 @@ public class JsonComparatorBuilderTest {
     //
     JsonComparatorBuilder result = this.builder.withGson(this.gson);
     JsonComparator comparator = this.builder.build();
+    JsonComparatorUtil util = this.builder.buildUtil();
 
     //
     // Verify
     //
     assertSame(result, this.builder);
     assertSame(this.gson, comparator.getGson());
+    assertSame(this.gson, util.getGson());
   }
 
   /**
@@ -86,6 +89,7 @@ public class JsonComparatorBuilderTest {
 
     result = this.builder.withJsonPathConfiguration(this.mockJsonPathConfiguration);
     comparator = this.builder.build();
+    JsonComparatorUtil util = this.builder.buildUtil();
 
     //
     // Verify
@@ -98,6 +102,7 @@ public class JsonComparatorBuilderTest {
                                                   "jsonPathConfiguration");
 
     assertSame(this.mockJsonPathConfiguration, actualJsonPathConfig);
+    assertSame(this.mockJsonPathConfiguration, util.getJsonPathConfiguration());
   }
 
   /**
@@ -139,6 +144,7 @@ public class JsonComparatorBuilderTest {
     // Execute
     //
     JsonComparator comparator = this.builder.build();
+    JsonComparatorUtil util = this.builder.buildUtil();
 
     //
     // Verify
@@ -152,5 +158,7 @@ public class JsonComparatorBuilderTest {
     assertTrue(actualJsonPathConfig.containsOption(Option.AS_PATH_LIST));
     assertTrue(actualJsonPathConfig.containsOption(Option.ALWAYS_RETURN_LIST));
     assertNotSame(this.gson, comparator.getGson());
+
+    assertSame(actualJsonPathConfig, util.getJsonPathConfiguration());
   }
 }

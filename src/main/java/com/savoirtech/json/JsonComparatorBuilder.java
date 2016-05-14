@@ -23,6 +23,7 @@ import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.Option;
 import com.jayway.jsonpath.spi.json.GsonJsonProvider;
 import com.savoirtech.json.processor.JsonComparisonProcessorFactory;
+import com.savoirtech.json.util.JsonComparatorUtil;
 
 /**
  * Build a JsonComparator using the fluent builder pattern.
@@ -62,6 +63,33 @@ public class JsonComparatorBuilder {
   public JsonComparator build() {
     JsonComparator result = new JsonComparator();
 
+    this.prepare();
+
+    result.setGson(this.gson);
+    result.setJsonComparisonProcessorFactory(this.jsonComparisonProcessorFactory);
+
+    return result;
+  }
+
+  public JsonComparatorUtil buildUtil() {
+    JsonComparatorUtil result = new JsonComparatorUtil();
+
+    this.prepare();
+
+    result.setGson(this.gson);
+    result.setJsonPathConfiguration(this.jsonPathConfiguration);
+
+    return result;
+  }
+
+//========================================
+// Internals
+//----------------------------------------
+
+  /**
+   * Prepare configuration and settings for use in building, filling in defaults as-needed.
+   */
+  private void prepare() {
     if (this.gson == null) {
       this.gson = new GsonBuilder().create();
     }
@@ -74,13 +102,13 @@ public class JsonComparatorBuilder {
       this.jsonComparisonProcessorFactory =
           new JsonComparisonProcessorFactory(this.jsonPathConfiguration);
     }
-
-    result.setGson(this.gson);
-    result.setJsonComparisonProcessorFactory(this.jsonComparisonProcessorFactory);
-
-    return result;
   }
 
+  /**
+   * Build the default JSON Path configuration.
+   *
+   * @return
+   */
   private Configuration buildDefaultConfiguration() {
     //
     // Prepare the configuration to use with the jsonPath library.
