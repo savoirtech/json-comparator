@@ -20,6 +20,9 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -44,6 +47,7 @@ public class JsonComparatorIT {
     JsonComparatorResult result = this.comparator.compare(rules01, actual01);
 
     assertTrue("expect match; error=" + result.getErrorMessage(), result.isMatch());
+    assertNull(result.getErrorPath());
   }
 
   @Test
@@ -60,6 +64,7 @@ public class JsonComparatorIT {
 
     // Same thing, except include the error message on mismatches:
     assertTrue(result.getErrorMessage(), result.isMatch());
+    assertNull(result.getErrorPath());
   }
 
   @Test
@@ -74,5 +79,22 @@ public class JsonComparatorIT {
     JsonComparatorResult result = comparator.compare(comparisonSpec, actualJson);
 
     assertTrue(result.getErrorMessage(), result.isMatch());
+    assertNull(result.getErrorPath());
+  }
+
+  @Test
+  public void testFailureCase() {
+    JsonComparator comparator = new JsonComparatorBuilder().build();
+
+    String
+        comparisonSpec =
+        "{ \"rules\": [ { \"selector\": { \"path\": \"$[2]\" }, \"action\": \"matches\", \"pattern\": \"[3-5]\" } ], \"templateJson\": [ 2, 4, 6 ] }";
+    String actualJson = "[ 2, 4, 6 ]";
+
+    JsonComparatorResult result = comparator.compare(comparisonSpec, actualJson);
+
+    assertFalse(result.isMatch());
+    assertEquals("value at path $[2] does not match '[3-5]': value=6", result.getErrorMessage());
+    assertEquals("$[2]", result.getErrorPath());
   }
 }
