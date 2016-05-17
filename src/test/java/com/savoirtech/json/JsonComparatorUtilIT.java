@@ -16,13 +16,15 @@
 
 package com.savoirtech.json;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
 import com.savoirtech.json.util.JsonComparatorUtil;
 import com.savoirtech.json.util.model.JsonComparatorResultDetails;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,7 +32,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Integrated test of the JsonComparator.
@@ -56,7 +57,8 @@ public class JsonComparatorUtilIT {
 
     JsonComparatorResultDetails
         details =
-        this.runUtilTest(comparisonSpec, actualJson, new JsonPrimitive(8), new JsonPrimitive(6));
+        this.runUtilTest(comparisonSpec, actualJson, new JsonPrimitive(8), new JsonPrimitive(6),
+                         null);
 
     JsonComparatorResult result = comparator.compare(comparisonSpec, actualJson);
 
@@ -72,9 +74,30 @@ public class JsonComparatorUtilIT {
 
     JsonComparatorResultDetails
         details =
-        this.runUtilTest(comparisonSpec, actualJson, new JsonPrimitive(6), new JsonPrimitive(6));
+        this.runUtilTest(comparisonSpec, actualJson, new JsonPrimitive(6), new JsonPrimitive(6),
+                         null);
 
     assertNotNull(details.getMatchingRule());
+  }
+
+  @Test
+  public void testExtractRuleFailureDetailsWithNullsFields() {
+    Gson serializeNullsGson = new GsonBuilder().serializeNulls().create();
+
+    String expectedJson = "{ \"field1\": 1, \"field2\": 2 }";
+
+    String
+        comparisonSpec =
+        "{ \"rules\": [], \"templateJson\": " + expectedJson + " }";
+    String actualJson = "{ \"field1\": null, \"field3\": 3 }";
+
+    JsonElement expectedJsonEle = new JsonParser().parse(expectedJson);
+    JsonElement actualJsonEle = new JsonParser().parse(actualJson);
+
+    JsonComparatorResultDetails
+        details =
+        this.runUtilTest(comparisonSpec, actualJson, actualJsonEle, expectedJsonEle,
+                         serializeNullsGson);
   }
 
 //========================================
@@ -83,9 +106,15 @@ public class JsonComparatorUtilIT {
 
   private JsonComparatorResultDetails runUtilTest(String comparisonSpec, String actualJsonString,
                                                   JsonElement expectedActualJsonEle,
-                                                  JsonElement expectedTemplateJsonEle) {
+                                                  JsonElement expectedTemplateJsonEle,
+                                                  Gson optionalGson) {
 
     JsonComparatorBuilder builder = new JsonComparatorBuilder();
+
+    if (optionalGson != null) {
+      builder.withGson(optionalGson);
+    }
+
     JsonComparator comparator = builder.build();
     JsonComparatorUtil util = builder.buildUtil();
 

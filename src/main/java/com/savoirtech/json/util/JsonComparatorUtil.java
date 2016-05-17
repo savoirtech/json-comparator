@@ -83,7 +83,7 @@ public class JsonComparatorUtil {
     JsonPath path = JsonPath.compile(comparisonResult.getErrorPath());
 
     Configuration jsonPathConfig = Configuration.builder()
-        .jsonProvider(new GsonJsonProvider())
+        .jsonProvider(new GsonJsonProvider(this.gson))
         .build();
 
     //
