@@ -27,7 +27,7 @@
 
     <groupId>com.savoirtech.json</groupId>
     <artifactId>json-comparator</artifactId>
-    <version>1.1.1</version>
+    <version>1.1.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>JSON Comparator</name>
